@@ -40,6 +40,10 @@ class Settings(BaseSettings):
 
     PRIMARY_LANG: str = "en"
     DEFAULT_LANG: str = "en"
+    
+    # MongoDB configuration for video processing
+    MONGODB_URL: str = "mongodb://localhost:27017"
+    MONGODB_DB_NAME: str = "video_faces"
 
     class Config:
         env_file = ".env"

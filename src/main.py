@@ -1,61 +1,31 @@
 from fastapi import FastAPI
-from routes import base, data, nlp
+from routes import video
+from routes.combined_video import video_router
 from helpers.config import get_settings
-from stores.llm.LLMProviderFactory import LLMProviderFactory
-from stores.vectordb.VectorDBProviderFactory import VectorDBProviderFactory
-from stores.llm.templates.template_parser import TemplateParser
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
 
-# Import metrics setup
-from utils.metrics import setup_metrics
+app = FastAPI(
+    title="Mini-RAG Video Processing API",
+    description="API for video processing including face extraction and speech transcription",
+    version="1.0.0"
+)
 
-app = FastAPI()
-
-# Setup Prometheus metrics
-setup_metrics(app)
-
+# Simple startup for video processing
 async def startup_span():
     settings = get_settings()
+    print(f"Starting Mini-RAG Video Processing API...")
+    print(f"MongoDB URL: {settings.MONGODB_URL}")
+    print(f"MongoDB Database: {settings.MONGODB_DB_NAME}")
+    print(f"Available endpoints:")
+    print(f"  - /api/videos/* (Face extraction only)")
+    print(f"  - /video/* (Combined face extraction + speech transcription)")
 
-    postgres_conn = f"postgresql+asyncpg://{settings.POSTGRES_USERNAME}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_MAIN_DATABASE}"
-
-    app.db_engine = create_async_engine(postgres_conn)
-    app.db_client = sessionmaker(
-        app.db_engine, class_=AsyncSession, expire_on_commit=False
-    )
-
-    llm_provider_factory = LLMProviderFactory(settings)
-    vectordb_provider_factory = VectorDBProviderFactory(config=settings, db_client=app.db_client)
-
-    # generation client
-    app.generation_client = llm_provider_factory.create(provider=settings.GENERATION_BACKEND)
-    app.generation_client.set_generation_model(model_id = settings.GENERATION_MODEL_ID)
-
-    # embedding client
-    app.embedding_client = llm_provider_factory.create(provider=settings.EMBEDDING_BACKEND)
-    app.embedding_client.set_embedding_model(model_id=settings.EMBEDDING_MODEL_ID,
-                                             embedding_size=settings.EMBEDDING_MODEL_SIZE)
-    
-    # vector db client
-    app.vectordb_client = vectordb_provider_factory.create(
-        provider=settings.VECTOR_DB_BACKEND
-    )
-    await app.vectordb_client.connect()
-
-    app.template_parser = TemplateParser(
-        language=settings.PRIMARY_LANG,
-        default_language=settings.DEFAULT_LANG,
-    )
-
-
+# Simple shutdown for video processing
 async def shutdown_span():
-    app.db_engine.dispose()
-    await app.vectordb_client.disconnect()
+    print("Shutting down Mini-RAG Video Processing API...")
 
 app.on_event("startup")(startup_span)
 app.on_event("shutdown")(shutdown_span)
 
-app.include_router(base.base_router)
-app.include_router(data.data_router)
-app.include_router(nlp.nlp_router)
+# Include video routers
+app.include_router(video.router)  # Existing face extraction functionality
+app.include_router(video_router)  # New combined video processing with MVC architecture

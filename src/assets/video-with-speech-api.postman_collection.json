@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "video-speech-api-collection",
+		"name": "Video Processing API with Speech Transcription",
+		"description": "Complete API for video face extraction and speech transcription with timestamps and pitch analysis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Video Management",
+			"item": [
+				{
+					"name": "Upload Video",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"type": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "",
+									"description": "Video file to upload (MP4, AVI, MOV, etc.)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/videos/upload",
+							"host": ["{{base_url}}"],
+							"path": ["api", "videos", "upload"]
+						},
+						"description": "Upload a video file for processing. This will start both face extraction and speech transcription in the background."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Video Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/videos/{{video_id}}/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "videos", "{{video_id}}", "status"]
+						},
+						"description": "Get the processing status of a video including transcription status"
+					},
+					"response": []
+				},
+				{
+					"name": "List All Videos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/videos?skip=0&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "videos"],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of records to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Maximum number of records to return"
+								}
+							]
+						},
+						"description": "Get a paginated list of all videos"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Video",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/videos/{{video_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "videos", "{{video_id}}"]
+						},
+						"description": "Delete a video and all its associated data"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Face Extraction",
+			"item": [
+				{
+					"name": "Get Video Frames",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/videos/{{video_id}}/frames?skip=0&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "videos", "{{video_id}}", "frames"],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0",
+									"description": "Number of frames to skip"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Maximum number of frames to return"
+								}
+							]
+						},
+						"description": "Get extracted frames and face data from a video"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Frame",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/video/frame/{{video_id}}/{{frame_number}}",
+							"host": ["{{base_url}}"],
+							"path": ["video", "frame", "{{video_id}}", "{{frame_number}}"]
+						},
+						"description": "Get a specific frame by number"
+					},
+					"response": []
+				},
+				{
+					"name": "Download All Frames",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/video/download-frames/{{video_id}}?faces_only=false",
+							"host": ["{{base_url}}"],
+							"path": ["video", "download-frames", "{{video_id}}"],
+							"query": [
+								{
+									"key": "faces_only",
+									"value": "false",
+									"description": "Set to true to download only cropped face images"
+								}
+							]
+						},
+						"description": "Download all frames as a ZIP file"
+					},
+					"response": []
+				},
+				{
+					"name": "Reprocess Video",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"type": "raw",
+							"raw": "{\n    \"frame_interval\": 60\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/video/reprocess/{{video_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["video", "reprocess", "{{video_id}}"]
+						},
+						"description": "Reprocess a video with different settings (includes both face extraction and speech transcription)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Speech Transcription",
+			"item": [
+				{
+					"name": "Get Transcription",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/video/transcription/{{video_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["video", "transcription", "{{video_id}}"]
+						},
+						"description": "Get speech transcription with timestamps like [5.72s - 7.78s]: Can I come in, ma'am?"
+					},
+					"response": [
+						{
+							"name": "Sample Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/video/transcription/{{video_id}}",
+									"host": ["{{base_url}}"],
+									"path": ["video", "transcription", "{{video_id}}"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"video_id\": \"65a1b2c3d4e5f6789abcdef0\",\n    \"transcription_status\": \"completed\",\n    \"transcription_segments\": [\n        {\n            \"start_time\": 5.72,\n            \"end_time\": 7.78,\n            \"text\": \"Can I come in, ma'am?\",\n            \"confidence\": 0.95\n        },\n        {\n            \"start_time\": 8.12,\n            \"end_time\": 10.45,\n            \"text\": \"Yes, please come in.\",\n            \"confidence\": 0.92\n        }\n    ],\n    \"transcription_error\": null,\n    \"formatted_transcription\": [\n        \"[5.72s - 7.78s]: Can I come in, ma'am?\",\n        \"[8.12s - 10.45s]: Yes, please come in.\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Pitch Analysis",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/video/pitch-analysis/{{video_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["video", "pitch-analysis", "{{video_id}}"]
+						},
+						"description": "Get pitch analysis and emotion classification for the speech"
+					},
+					"response": [
+						{
+							"name": "Sample Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/video/pitch-analysis/{{video_id}}",
+									"host": ["{{base_url}}"],
+									"path": ["video", "pitch-analysis", "{{video_id}}"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"video_id\": \"65a1b2c3d4e5f6789abcdef0\",\n    \"pitch_analysis\": [\n        {\n            \"time\": 5.72,\n            \"pitch_hz\": 180.5,\n            \"pitch_normalized\": 0.65\n        },\n        {\n            \"time\": 6.0,\n            \"pitch_hz\": 195.2,\n            \"pitch_normalized\": 0.72\n        }\n    ],\n    \"emotion_classification\": [\n        {\n            \"start_time\": 5.72,\n            \"end_time\": 7.78,\n            \"emotion\": \"polite_inquiry\",\n            \"confidence\": 0.85\n        },\n        {\n            \"start_time\": 8.12,\n            \"end_time\": 10.45,\n            \"emotion\": \"welcoming\",\n            \"confidence\": 0.78\n        }\n    ],\n    \"transcription_status\": \"completed\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Transcribe Only",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/video/transcribe-only/{{video_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["video", "transcribe-only", "{{video_id}}"]
+						},
+						"description": "Start transcription processing for an existing video without reprocessing faces"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "API Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						},
+						"description": "Check if the API is running"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string",
+			"description": "Base URL for the video processing API"
+		},
+		{
+			"key": "video_id",
+			"value": "",
+			"type": "string",
+			"description": "Video ID returned from upload endpoint - update this after uploading a video"
+		}
+	]
+}

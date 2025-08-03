@@ -1,0 +1,123 @@
+{
+  "info": {
+    "name": "Combined Video Processing API - Face + Speech",
+    "description": "Complete API for video face extraction and speech transcription with timestamps",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. API Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": [""]
+        },
+        "description": "Check if the API is running and see available features"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Upload Video for Complete Processing",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/path/to/your/video.mp4",
+              "description": "Video file to process (mp4, avi, mov, etc.)"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/upload",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["upload"]
+        },
+        "description": "Upload a video file for combined face extraction and speech transcription processing. Returns a video_id for tracking."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Check Processing Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/status/{{video_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["status", "{{video_id}}"]
+        },
+        "description": "Check the processing status of both face extraction and speech transcription. Replace {{video_id}} with actual ID from upload response."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Get Speech Transcription Results",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/transcription/{{video_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["transcription", "{{video_id}}"]
+        },
+        "description": "Get detailed speech transcription with timestamps in format '[0.00s - 8.00s]: Can I come in, ma'am?'. Replace {{video_id}} with actual ID."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Get Face Extraction Results",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/frames/{{video_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["frames", "{{video_id}}"]
+        },
+        "description": "Get face extraction results including frames processed and faces detected. Replace {{video_id}} with actual ID."
+      },
+      "response": []
+    },
+    {
+      "name": "6. List All Processed Videos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/videos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["videos"]
+        },
+        "description": "Get a list of all videos that have been processed"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "video_id",
+      "value": "your-video-id-here",
+      "description": "The unique video ID returned from upload endpoint"
+    }
+  ]
+}

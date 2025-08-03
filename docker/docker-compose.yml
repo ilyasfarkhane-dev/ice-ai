@@ -66,6 +66,28 @@ services:
       - backend
     restart: always
 
+  # MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: video_faces
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Prometheus Monitoring
   prometheus:
     image: prom/prometheus:v3.3.0
@@ -143,5 +165,7 @@ volumes:
   fastapi_data:
   pgvector:
   qdrant_data:
+  mongodb_data:
+  mongodb_config:
   prometheus_data:
   grafana_data:

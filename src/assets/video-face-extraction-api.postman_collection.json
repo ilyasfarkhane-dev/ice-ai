@@ -1,0 +1,211 @@
+{
+  "info": {
+    "name": "Video Face Extraction API",
+    "description": "API endpoints for uploading and processing videos for face extraction",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Upload Video",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "/path/to/your/video.mp4",
+              "description": "Select your video file here"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/videos/upload",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "upload"]
+        },
+        "description": "Upload a video file for face extraction processing"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Video Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}/status",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}", "status"]
+        },
+        "description": "Get processing status and statistics for a video"
+      },
+      "response": []
+    },
+    {
+      "name": "List All Videos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos?skip=0&limit=10",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos"],
+          "query": [
+            {
+              "key": "skip",
+              "value": "0",
+              "description": "Number of videos to skip"
+            },
+            {
+              "key": "limit",
+              "value": "10",
+              "description": "Number of videos to return"
+            }
+          ]
+        },
+        "description": "List all uploaded videos with pagination"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Video Frames",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}/frames?skip=0&limit=20&faces_only=false",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}", "frames"],
+          "query": [
+            {
+              "key": "skip",
+              "value": "0"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "faces_only",
+              "value": "false",
+              "description": "Set to true to get only frames with detected faces"
+            }
+          ]
+        },
+        "description": "Get extracted frames for a video"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Frames with Faces Only",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}/frames?faces_only=true",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}", "frames"],
+          "query": [
+            {
+              "key": "faces_only",
+              "value": "true"
+            }
+          ]
+        },
+        "description": "Get only frames where faces were detected"
+      },
+      "response": []
+    },
+    {
+      "name": "Reprocess Video",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}/reprocess?frame_interval=15",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}", "reprocess"],
+          "query": [
+            {
+              "key": "frame_interval",
+              "value": "15",
+              "description": "Frame extraction interval (optional)"
+            }
+          ]
+        },
+        "description": "Reprocess a video with different settings"
+      },
+      "response": []
+    },
+    {
+      "name": "Download Frames ZIP",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}/download-frames?faces_only=false",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}", "download-frames"],
+          "query": [
+            {
+              "key": "faces_only",
+              "value": "false",
+              "description": "Set to true to download only face images"
+            }
+          ]
+        },
+        "description": "Download all frames as a ZIP file"
+      },
+      "response": []
+    },
+    {
+      "name": "Download Faces ZIP",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}/download-frames?faces_only=true",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}", "download-frames"],
+          "query": [
+            {
+              "key": "faces_only",
+              "value": "true"
+            }
+          ]
+        },
+        "description": "Download all cropped face images as a ZIP file"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Video",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/videos/{{video_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "videos", "{{video_id}}"]
+        },
+        "description": "Delete a video and all its associated data"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "description": "Base URL for the API"
+    },
+    {
+      "key": "video_id",
+      "value": "",
+      "description": "Video ID returned from upload endpoint"
+    }
+  ]
+}
